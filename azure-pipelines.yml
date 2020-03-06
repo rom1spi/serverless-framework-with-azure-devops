@@ -1,0 +1,25 @@
+resources:
+  repositories:
+    - repository: sls_install
+      type: git
+      name: <MY_REPO>/serverless-framework-install
+    - repository: serverless_examples
+      type: github
+      name: serverless/examples
+      endpoint: serverless
+
+jobs:
+- job: install_clone_deploy
+  pool:
+    vmImage: 'ubuntu-latest'
+  variables:
+    - group: aws-creds-group
+  steps:
+    - template: install-serverless-framework.yml@sls_install
+    - script: git clone https://github.com/serverless/examples
+      displayName: Clone git repo
+    - script: |
+        sudo sls config credentials --provider aws --key $(AWS_ACCESS_KEY_ID) --secret $(AWS_SECRET_ACCESS_KEY)
+        cd examples/$(sls-example-name)
+        sudo sls deploy -v
+      displayName: Serverless deploy
