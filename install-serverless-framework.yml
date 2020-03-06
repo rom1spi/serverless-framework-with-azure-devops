@@ -1,0 +1,7 @@
+steps:
+- script: npm install
+  displayName: 'Install npm'
+- script: sudo npm install -g serverless
+  displayName: 'Install Serverless Framework'
+- script: npm install serverless-pseudo-parameters
+  displayName: 'Install sls plugin'
